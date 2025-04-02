@@ -1,0 +1,45 @@
+# Visual Studio / .NET / SignalR
+
+# Pliki kompilacji i konfiguracji VS
+.vs/
+*.user
+*.suo
+*.sln.docstates
+*.cache
+*.pdb
+
+# Pliki systemowe
+bin/
+obj/
+*.dbmdl
+*.jfm
+*.log
+
+# Pliki pakietów i zależności
+node_modules/
+packages/
+*.nupkg
+*.snupkg
+project.lock.json
+*.props
+*.targets
+
+# ASP.NET / SignalR / Kestrel
+appsettings.Development.json
+secrets.json
+wwwroot/
+
+# Logi i pliki tymczasowe
+logs/
+*.log
+**/logs/
+**/*.log
+.DS_Store
+*.swp
+*.swo
+
+# Pliki debugowania i konfiguracji
+*.bak
+*.tmp
+*.ide
+*.pidb
