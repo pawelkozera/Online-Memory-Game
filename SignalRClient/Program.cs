@@ -1,19 +1,17 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
+using System;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 var connection = new HubConnectionBuilder()
-    .WithUrl("http://localhost:5296/chatHub")
+    .WithUrl("http://localhost:5296/gameHub")
     .WithAutomaticReconnect()
     .Build();
-
-connection.On<string, string>("ReceiveMessage", (user, message) =>
-{
-    Console.WriteLine($"{user}: {message}");
-});
 
 try
 {
     await connection.StartAsync();
-    Console.WriteLine("Połączono z serwerem SignalR.");
+    Console.WriteLine("Połączono z serwerem.");
 }
 catch (Exception ex)
 {
@@ -21,17 +19,48 @@ catch (Exception ex)
     return;
 }
 
-while (true)
+connection.On<string>("ReceiveResponse", (jsonResponse) =>
 {
-    Console.Write("Podaj nazwę użytkownika: ");
-    string user = Console.ReadLine();
+    Console.WriteLine($"Odebrana odpowiedź JSON: {jsonResponse}");
 
-    Console.Write("Podaj wiadomość: ");
-    string message = Console.ReadLine();
+    var response = JsonSerializer.Deserialize<GameResponse>(jsonResponse);
 
-    if (string.IsNullOrWhiteSpace(message)) break;
+    if (response != null && response.Status == "success")
+    {
+        Console.WriteLine($"Dołączono do gry {response.GameId}");
+        Console.WriteLine("Gracze w grze: " + string.Join(", ", response.Players));
+    }
+    else
+    {
+        Console.WriteLine($"Błąd: {response?.Status}");
+    }
+});
 
-    await connection.InvokeAsync("SendMessage", user, message);
-}
 
+Console.Write("Podaj swój nick: ");
+string playerName = Console.ReadLine();
+
+var request = new
+{
+    action = "join",
+    playerId = Guid.NewGuid().ToString(),
+    playerName = playerName
+};
+
+string jsonRequest = JsonSerializer.Serialize(request);
+
+Console.WriteLine($"Wysyłany JSON: {jsonRequest}");
+
+await connection.SendAsync("HandleRequest", jsonRequest);
+
+Console.WriteLine("Wysłano żądanie do serwera!");
+
+Console.ReadLine();
 await connection.StopAsync();
+
+public class GameResponse
+{
+    public string Status { get; set; }
+    public string GameId { get; set; }
+    public List<string> Players { get; set; }
+}

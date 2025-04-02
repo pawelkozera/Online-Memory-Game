@@ -22,7 +22,7 @@ app.UseRouting();
 
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapHub<ChatHub>("/chatHub");
+    endpoints.MapHub<GameHub>("/gameHub");
 });
 
 app.Run();
