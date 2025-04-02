@@ -9,8 +9,8 @@
 *.pdb
 
 # Pliki systemowe
-bin/
-obj/
+**/bin/
+**/obj/
 *.dbmdl
 *.jfm
 *.log
@@ -25,9 +25,9 @@ project.lock.json
 *.targets
 
 # ASP.NET / SignalR / Kestrel
-appsettings.Development.json
-secrets.json
-wwwroot/
+**/appsettings.Development.json
+**/secrets.json
+**/wwwroot/
 
 # Logi i pliki tymczasowe
 logs/
